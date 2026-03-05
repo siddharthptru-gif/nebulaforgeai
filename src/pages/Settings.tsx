@@ -44,7 +44,7 @@ export default function Settings() {
               <div className="space-y-6 bg-white/5 border border-white/10 rounded-3xl p-8">
                 <div className="flex items-center gap-6">
                   <div className="w-20 h-20 rounded-full bg-emerald-500 flex items-center justify-center text-3xl font-bold text-black">
-                    {user?.email?.[0].toUpperCase()}
+                    {(user?.email?.[0] || 'U').toUpperCase()}
                   </div>
                   <div>
                     <button className="px-4 py-2 bg-white text-black rounded-lg text-sm font-bold hover:bg-emerald-400 transition-all">
@@ -59,7 +59,7 @@ export default function Settings() {
                     <label className="block text-sm font-medium text-white/60 mb-2">Email Address</label>
                     <input 
                       type="email" 
-                      value={user?.email} 
+                      value={user?.email || ''} 
                       disabled
                       className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/40 cursor-not-allowed"
                     />

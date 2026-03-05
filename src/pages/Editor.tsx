@@ -84,6 +84,7 @@ export default function Editor() {
   };
 
   const handleSave = async () => {
+    if (!project?.content) return;
     setSaving(true);
     try {
       await update(ref(db, `projects/${projectId}`), { content: project.content });
@@ -94,9 +95,12 @@ export default function Editor() {
   };
 
   const handlePublish = async () => {
+    if (!project?.content?.pages) return;
     setPublishing(true);
     try {
-      const currentPage = project.content.pages[currentPageIndex];
+      const currentPage = project.content.pages[currentPageIndex] || project.content.pages[0];
+      if (!currentPage) throw new Error("No page content found");
+      
       const fullHtml = `
         <!DOCTYPE html>
         <html>
@@ -140,7 +144,7 @@ export default function Editor() {
     setPublishing(false);
   };
 
-  if (loading) {
+  if (loading || !project) {
     return (
       <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-white">
         <Loader2 className="w-12 h-12 animate-spin text-emerald-500 mb-4" />
@@ -149,7 +153,7 @@ export default function Editor() {
     );
   }
 
-  const currentPage = project.content.pages[currentPageIndex];
+  const currentPage = project?.content?.pages?.[currentPageIndex] || project?.content?.pages?.[0] || { sections: [] };
 
   return (
     <div className="h-screen bg-zinc-950 text-white flex flex-col overflow-hidden">
@@ -160,7 +164,7 @@ export default function Editor() {
             <ChevronLeft className="w-5 h-5" />
           </Link>
           <div className="h-6 w-px bg-white/10 mx-2" />
-          <h1 className="font-bold text-sm tracking-tight">{project.name}</h1>
+          <h1 className="font-bold text-sm tracking-tight">{project?.name || 'Untitled Project'}</h1>
           <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">Draft</span>
         </div>
 
@@ -244,7 +248,7 @@ export default function Editor() {
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
-                {project.content.pages.map((page: any, i: number) => (
+                {project?.content?.pages?.map((page: any, i: number) => (
                   <button
                     key={i}
                     onClick={() => setCurrentPageIndex(i)}
@@ -265,7 +269,7 @@ export default function Editor() {
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Colors</h3>
                   <div className="grid grid-cols-2 gap-4">
-                    {Object.entries(project.content.theme.colors).map(([key, value]: [string, any]) => (
+                    {Object.entries(project?.content?.theme?.colors || {}).map(([key, value]: [string, any]) => (
                       <div key={key}>
                         <label className="block text-[10px] text-white/40 uppercase mb-2">{key}</label>
                         <div className="flex items-center gap-2 p-2 bg-white/5 rounded-lg border border-white/10">

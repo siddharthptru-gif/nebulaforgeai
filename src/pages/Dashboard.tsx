@@ -43,7 +43,7 @@ export default function Dashboard() {
       // Handle initial prompt from landing page
       const state = location.state as { initialPrompt?: string };
       if (state?.initialPrompt) {
-        setPrompt(state.initialPrompt);
+        setPrompt(state.initialPrompt || '');
         document.getElementById('create-modal')?.classList.remove('hidden');
       }
     }
@@ -71,7 +71,8 @@ export default function Dashboard() {
 
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!prompt.trim() || !user) return;
+    const safePrompt = (prompt || '').trim();
+    if (!safePrompt || !user) return;
     setCreating(true);
 
     try {
@@ -81,8 +82,8 @@ export default function Dashboard() {
 
       await set(newProjectRef, {
         userId: user.uid,
-        name: prompt.slice(0, 20) + '...',
-        prompt: prompt,
+        name: safePrompt.slice(0, 20) + (safePrompt.length > 20 ? '...' : ''),
+        prompt: safePrompt,
         content: {},
         createdAt: Date.now()
       });

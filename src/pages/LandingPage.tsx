@@ -11,14 +11,15 @@ export default function LandingPage() {
 
   const handleGenerate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!prompt.trim()) return;
+    const safePrompt = (prompt || '').trim();
+    if (!safePrompt) return;
     
     if (user) {
       // If logged in, go to dashboard with prompt or handle creation
-      navigate('/dashboard', { state: { initialPrompt: prompt } });
+      navigate('/dashboard', { state: { initialPrompt: safePrompt } });
     } else {
       // If not logged in, go to signup
-      navigate('/signup', { state: { initialPrompt: prompt } });
+      navigate('/signup', { state: { initialPrompt: safePrompt } });
     }
   };
 
