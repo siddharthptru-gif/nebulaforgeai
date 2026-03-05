@@ -1,9 +1,27 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Rocket, Zap, Globe, Palette, Layout, Shield, ArrowRight, Sparkles } from 'lucide-react';
+import { Rocket, Zap, Globe, Palette, Layout, Shield, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
+import { useAuth } from '../components/AuthProvider';
 
 export default function LandingPage() {
+  const [prompt, setPrompt] = useState('');
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGenerate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prompt.trim()) return;
+    
+    if (user) {
+      // If logged in, go to dashboard with prompt or handle creation
+      navigate('/dashboard', { state: { initialPrompt: prompt } });
+    } else {
+      // If not logged in, go to signup
+      navigate('/signup', { state: { initialPrompt: prompt } });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white selection:bg-emerald-500/30">
       {/* Navigation */}
@@ -51,6 +69,27 @@ export default function LandingPage() {
             <p className="text-xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed">
               NebulaForge AI transforms your ideas into professional, high-performance websites instantly. No code, no limits, just pure creativity.
             </p>
+
+            <form onSubmit={handleGenerate} className="max-w-2xl mx-auto mb-12 relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative flex flex-col sm:flex-row gap-2 p-2 bg-zinc-900 border border-white/10 rounded-2xl">
+                <input
+                  type="text"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="Describe your dream website..."
+                  className="flex-1 px-6 py-4 bg-transparent border-none focus:outline-none text-white text-lg"
+                />
+                <button
+                  type="submit"
+                  className="px-8 py-4 bg-emerald-500 text-black rounded-xl text-lg font-bold hover:bg-emerald-400 transition-all flex items-center justify-center gap-2"
+                >
+                  <Sparkles className="w-5 h-5" />
+                  Generate
+                </button>
+              </div>
+            </form>
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/signup" className="w-full sm:w-auto px-8 py-4 bg-emerald-500 text-black rounded-full text-lg font-bold hover:bg-emerald-400 hover:scale-105 transition-all flex items-center justify-center gap-2">
                 Start Building Free <ArrowRight className="w-5 h-5" />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../components/AuthProvider';
 import { db } from '../firebase';
 import { ref, get, push, remove, set } from 'firebase/database';
@@ -34,12 +34,20 @@ export default function Dashboard() {
   const [creating, setCreating] = useState(false);
   const [prompt, setPrompt] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (user) {
       fetchProjects();
+      
+      // Handle initial prompt from landing page
+      const state = location.state as { initialPrompt?: string };
+      if (state?.initialPrompt) {
+        setPrompt(state.initialPrompt);
+        document.getElementById('create-modal')?.classList.remove('hidden');
+      }
     }
-  }, [user]);
+  }, [user, location]);
 
   const fetchProjects = async () => {
     try {
