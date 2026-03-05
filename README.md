@@ -1,11 +1,23 @@
-<div align="center">
+# NebulaForge AI
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Design, Build, and Launch Websites with AI in Seconds.
 
-  <h1>Built with AI Studio</h2>
+## Tech Stack
+- **Frontend**: React, Vite, TailwindCSS, Motion, Lucide
+- **Backend**: Express (Vercel Serverless compatible)
+- **Database**: Supabase
+- **Storage**: Vercel Blob
+- **AI**: Gemini 3.1 Pro
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Setup
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Set up environment variables in `.env`
+4. Run development server: `npm run dev`
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
-
-</div>
+## Environment Variables
+- `GEMINI_API_KEY`: Your Google Gemini API Key
+- `VITE_SUPABASE_URL`: Your Supabase Project URL
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key
+- `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase Service Role Key
+- `BLOB_READ_WRITE_TOKEN`: Your Vercel Blob Read/Write Token
